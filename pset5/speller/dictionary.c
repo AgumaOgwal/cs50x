@@ -19,15 +19,16 @@
  * 
  */
  #
- typedef struct node
+ typedef struct NODE
  {
-     char word[LENGTH-1];
-     struct node *next;
- }node;
+     char dictword[LENGTH-1];
+     struct NODE *next;
+ }NODE;
 
 bool check(const char *word)
 {
     // TODO
+    
     return false;
 }
 
@@ -54,11 +55,17 @@ bool load(const char *dictionary)
     
     char word[LENGTH];
     int index = 0;
-    boolean firstSet = false;
-    node *listPointer ;
-    node *tempNext ;
-    node *node ;
+    bool firstSet = false;
+    
+    //initialised the below variables to null to silence errors at compilation
+    NODE *listPointer =NULL;
+    NODE *tempNext = NULL;
+    NODE *node = NULL;
     //newnode->word =
+    
+    //the below statement reads character by character from the input ( fgetc(fp) )
+    //I simply need to wait for the end of string terminator to know we have formed a full word
+    //and then i kick off the logic to create a NODE with a word and pointer to a next word
    for (int c = fgetc(fp); c != EOF; c = fgetc(fp))
     {
         //printf("%c",c);
@@ -67,27 +74,74 @@ bool load(const char *dictionary)
             //printf("Current word is ");
             for(int j=0; j<index; j++)
             {
-                printf("%c",word[j]);
+                //printf("%c",word[j]);
             }
             printf("\n");
+            
+            //if the first node has been set, we take this route
+            //in this route, instead of mallocing new memory space, we use memory that has already been allocated as a
+            //next pointer from the first/previous pointer
             if(firstSet==true)
             {
+                //tempNext = malloc(sizeof(node));
+                //tempNext= node; 
+                
+                //printf("firstSet is true\n");
+                
+                NODE *node = tempNext;
+                //used the below loop. because:
+                //1. node->dictword = word; directly assigning char * arrays was throwing an error
+                //2. the other option would have been strcpy(), but I was getting over lapping variables
+                for(int k=0; k<index; k++)
+                {
+                    node->dictword[k] = word[k];
+                }
+                //node->dictword = word;
+                //strcpy(node->dictword, word);
+                printf("Node Address is %p\n",node);
+                
+                printf("node->dictword is %s\n",node->dictword);
+                node->next = NULL;
                 tempNext = malloc(sizeof(node));
-                tempNext=&node; 
-            }
-            node *node = malloc(sizeof(node));
-            node->word = word;
-            node->next = NULL;
+                node->next =tempNext;
+                printf("Next Address is %p\n",tempNext);
             
-            tempNext = node;
+            }
+            else{
+            //NODE *node = malloc(sizeof(node));
+            NODE *node = malloc(sizeof(node));
+            
+            //used the below loop. because:
+            //1. node->dictword = word; directly assigning char * arrays was throwing an error
+            //2. the other option would have been strcpy(), but I was getting over lapping variables
+            for(int k=0; k<index; k++)
+            {
+                node->dictword[k] = word[k];
+            }
+            //node->dictword = word;
+            //strcpy(node->dictword, word);
+            printf("Node Address is %p\n",node);
+            
+            printf("node->dictword is %s\n",node->dictword);
+            node->next = NULL;
+            tempNext = malloc(sizeof(node));
+            node->next =tempNext;
+            printf("Next Address is %p\n",tempNext);
+            
+             listPointer = node;
+                firstSet = true;
+                printf("List Pointer Address is %p\n",listPointer);
+            }
+            //tempNext = node;
             
             //tempNext = 
             //set the first pointer to the first 
-            if(firstSet==false)
-            {
-                listPointer = &node;
-                firstSet = true;
-            }
+            // if(firstSet==false)
+            // {
+            //     listPointer = node;
+            //     firstSet = true;
+            //     printf("List Pointer Address is %p\n",listPointer);
+            // }
             
             
             for(int j=0; j<LENGTH; j++)
@@ -106,7 +160,7 @@ bool load(const char *dictionary)
     free(listPointer);
     free(tempNext);
     fclose(fp);
-    return false;
+    return true;
 }
 
 /**
