@@ -1,0 +1,12 @@
+1.  stdint.h is a header file that defines sets of integer types with specified widths
+2.  to have different integer types for use by the program of different sizes to be used as required
+3.  byte -1 byte, dword - 4 bytes, long - 4 bytes, word - 2 bytes
+4.  BM or 0X42 0X4d
+5.  bfSize is the size of the whole bitmap file while biSize is the size of the bitmapinfoheader
+6.  the bitmap will be top down
+7.  biBitCount
+8.  if the file to be opened doesn't exist.
+9.  because we are reading 1 element of data
+10. TODO
+11. TODO
+12. TODO
