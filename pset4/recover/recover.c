@@ -10,8 +10,8 @@
 #include <stdint.h>
 #include <cs50.h>
 
-//defining a new datatype called byte. which is basically an unsigned in of 8 bits/.. i think..
-//originally borrowed from bmp.h ....or Microsoft has definitions for these types
+//defining a new datatype called byte. which is basically an unsigned int of 8 bits/.. i think..
+//originally borrowed from bmp.h ....or Microsoft has proper definitions for these types
 typedef uint8_t  BYTE;
 
 //declaring our struct we shall be using. A buffer....each element of which is a byte
