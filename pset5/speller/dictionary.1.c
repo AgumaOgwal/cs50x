@@ -23,12 +23,12 @@
  
  typedef struct NODE
  {
-     char dictword[LENGTH-1];
+     //char dictword[LENGTH-1];
+     char *dictword;
      struct NODE *next;
  }NODE;
 
  NODE *listPointer = NULL;
- NODE *tempNext = NULL;
  int numberofwords = 0;
  
 bool check(const char *word)
@@ -60,25 +60,7 @@ bool check(const char *word)
             tempword[i] = word[i];
             tempword[i] = tolower(tempword[i]);
         }
-        //using the below instead of strcmp doesnt return any valgrind errors
-        //but it takes too long to run
-        //now going to attempt another method.
-        // for(int n=0; n<(int)strlen(word); n++)
-        // {
-        //     if(tempword[n]==cursor->dictword[n])
-        //     {
-        //         printf("cursor->dictword[%i] is %c | tempword[%i] is %c...Continuing\n",n,cursor->dictword[n],n,tempword[n]);
-        //         continue;
-        //     }
-        //     else
-        //     {
-        //         printf("cursor->dictword[%i] is %c | tempword[%i] is %c... Returning false\n",n,cursor->dictword[n],n,tempword[n]);
-        //         break;
-        //     }
-        // }
-        
         int compare = strcmp(tempword, cursor->dictword);
-        //int compare = strcmp(tempword, dictword);
          if(compare==0)
          {
              //printf("%s == %s\n",tempword, cursor->dictword);
@@ -130,7 +112,7 @@ bool load(const char *dictionary)
     
     //initialised the below variables to null to silence errors at compilation
     
-    //NODE *tempNext = NULL;
+    NODE *tempNext = NULL;
     
     //using the variable currentnode to help set node->next to null when we have reached the end of file
     NODE *currentnode = NULL;
@@ -165,10 +147,13 @@ bool load(const char *dictionary)
                 //used the below loop. because:
                 //1. node->dictword = word; directly assigning char * arrays was throwing an error
                 //2. the other option would have been strcpy(), but I was getting over lapping variables
-                for(int k=0; k<index; k++)
-                {
-                    node->dictword[k] = word[k];
-                }
+                char temporary[index];
+            for(int k=0; k<index; k++)
+            {
+                temporary[k] = word[k];
+                //node->dictword[k] = word[k];
+            }
+            node->dictword = temporary;
                 //node->dictword = word;
                 //strcpy(node->dictword, word);
                 //printf("Node Address is %p\n",node);
@@ -176,9 +161,7 @@ bool load(const char *dictionary)
                 //printf("node->dictword is %s",node->dictword);
                 node->next = NULL;
                 //printf(" | Okay..1");
-                tempNext = NULL;
-                //tempNext = malloc(sizeof(NODE));
-                tempNext = calloc(1,sizeof(NODE));
+                tempNext = malloc(sizeof(NODE));
                 //printf(" | Okay..2");
                 node->next =tempNext;
                 //printf(" | Okay..3\n");
@@ -188,29 +171,24 @@ bool load(const char *dictionary)
             }
             else{
             //NODE *node = malloc(sizeof(node));
-            //change the below to calloc to avoid valgridn error saying 
-            //"uninitialised value was created by a heap allocation"
-            //NODE *node = malloc(sizeof(NODE));
-            NODE *node = calloc(1,sizeof(NODE));
+            NODE *node = malloc(sizeof(NODE));
             
             //used the below loop. because:
             //1. node->dictword = word; directly assigning char * arrays was throwing an error
             //2. the other option would have been strcpy(), but I was getting over lapping variables
+            char temporary[index];
             for(int k=0; k<index; k++)
             {
-                node->dictword[k] = word[k];
+                temporary[k] = word[k];
+                //node->dictword[k] = word[k];
             }
-            //node->dictword = word;
+            node->dictword = temporary;
             //strcpy(node->dictword, word);
             //printf("Node Address is %p\n",node);
             
             //printf("node->dictword is %s\n",node->dictword);
             node->next = NULL;
-            tempNext = NULL;
-            //also changing the below to calloc. to avoid valgrind errors
-            //tempNext = malloc(sizeof(NODE));
-            tempNext = calloc(1,sizeof(NODE));
-            
+            tempNext = malloc(sizeof(NODE));
             node->next =tempNext;
             //printf("Next Address is %p\n",tempNext);
             
