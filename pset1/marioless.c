@@ -31,5 +31,8 @@ int main(void)
         printf("#\n");
         
         spaces--;
+        //just to reduce spaces
+        
+        printf("Yes")
     }
 }

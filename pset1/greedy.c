@@ -14,7 +14,7 @@ int main(void)
     }while (change <= 0 && isdigit(change)==true);
     
     int cents = (change+0.005) * 100;
-    printf("change is %f, cents %i\n",change,cents);
+    //printf("change is %f, cents %i\n",change,cents);
     
     int quarters = 0;
     int dimes = 0;
@@ -25,28 +25,28 @@ int main(void)
         quarters = cents/25;
         coins = coins + quarters;
         cents = cents % 25;
-        printf("coins: %i, cents: %i\n",coins,cents);
+        //printf("coins: %i, cents: %i\n",coins,cents);
     }
     while (cents >=10)
     {
         dimes = cents/10;
         coins = coins + dimes;
         cents = cents % 10;
-        printf("coins: %i, cents: %i\n",coins,cents);
+        //printf("coins: %i, cents: %i\n",coins,cents);
     }
     while (cents >=5)
     {
         dimes = cents/5;
         coins = coins + dimes;
         cents = cents % 5;
-        printf("coins: %i, cents: %i\n",coins,cents);
+        //printf("coins: %i, cents: %i\n",coins,cents);
     }
     while (cents >=1)
     {
         dimes = cents/1;
         coins = coins + dimes;
         cents = cents % 1;
-        printf("coins: %i, cents: %i\n",coins,cents);
+        //printf("coins: %i, cents: %i\n",coins,cents);
     }
     
     printf("%i\n",coins);
