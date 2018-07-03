@@ -5,6 +5,9 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
 
+#the below for debugging
+import sys
+
 from helpers import apology, login_required, lookup, usd
 
 # Configure application
@@ -39,7 +42,7 @@ def index():
     #first, get all necessary info
     userinfo = db.execute("SELECT * FROM users WHERE id = :userid", userid=session["user_id"])
     #select company, sum(shares) shares, sum(price) from portfolio group by company;
-    portfolio = db.execute("SELECT company, sum(shares) shares, sum(price) price FROM portfolio where userid = :userid group by company", userid=session["user_id"])
+    portfolio = db.execute("SELECT company, companyname, sum(shares) shares, sum(price) price FROM portfolio where userid = :userid group by company", userid=session["user_id"])
     username = userinfo[0]["username"]
     cash = userinfo[0]["cash"]
     stocks = []
@@ -50,11 +53,12 @@ def index():
         total = float(current_price) * int(row["shares"])
         totalest = round(total, 2)
         grandtotal = grandtotal + totalest
-        port = {"company":row["company"], "shares":row["shares"], "total":totalest, "price":quotation["price"]}
+        port = {"company":row["company"], "companyname":row["companyname"], "shares":row["shares"], "total":totalest, "price":quotation["price"]}
         stocks.append(port)
     
     grandtotal = grandtotal + cash
-    return render_template("index.html", username=username, cash=cash, stocks=stocks, total=grandtotal)
+    grandtotalest = round(grandtotal, 2)
+    return render_template("index.html", username=username, cash=cash, stocks=stocks, total=grandtotalest)
     
     return apology("TODO")
 
@@ -85,7 +89,7 @@ def buy():
             return apology("insufficient funds",403)
         
         #add stock to portfolio
-        add_portfolio = db.execute("INSERT INTO portfolio(userid, username, company, shares, price) VALUES(:userid, :username, :company, :shares, :price)",userid=session["user_id"],username=rows[0]["username"], company=request.form.get("symbol"), shares=int(request.form.get("numberofshares")), price=stockvalue)
+        add_portfolio = db.execute("INSERT INTO portfolio(userid, username, company, companyname, shares, price) VALUES(:userid, :username, :company, :companyname, :shares, :price)",userid=session["user_id"],username=rows[0]["username"], company=request.form.get("symbol"), companyname=quote["name"], shares=int(request.form.get("numberofshares")), price=stockvalue)
         
         #reduce cash accordingly
         update_row = db.execute("UPDATE users SET cash = cash - :cash where id = :id",cash=stockvalue, id=session["user_id"])
@@ -227,9 +231,43 @@ def sell():
     """Sell shares of stock"""
     if request.method == "POST":
         #todo
-        boss = "Okay"
+        if not request.form.get("symbol"):
+            return apology("must select company", 403)
+        elif not request.form.get("numberofshares"):
+            return apology("must provide number of shares", 403)
+            
+        symbol = request.form.get("symbol")
+        
+        shares = request.form.get("numberofshares")
+        
+        rows = db.execute("SELECT * FROM portfolio where userid = :userid and company = :company group by company", userid=session["user_id"], company=symbol)
+        
+        rowdy = db.execute("SELECT sum(shares) as shares FROM portfolio where userid = :userid and company = :company group by company", userid=session["user_id"], company=request.form.get("symbol"))
+        
+        #print('This error output', file=sys.stderr)
+        #print(rowdy[0]["shares"], file=sys.stdout)
+        #print(shares, file=sys.stdout)
+        
+        if int(rowdy[0]["shares"]) < int(shares) or shares < 0:
+            return apology("Not enough shares to sell", 403)
+        
+        else:
+            #return apology("More shares to sell", 403)
+            #Now Implementing selling of stocks
+            #deduct shares
+            
+            
+            
+        
     else:
-        render_template("sell.html")
+        #load all stocks currently held
+        portfolio = db.execute("SELECT company, sum(shares) shares, sum(price) price FROM portfolio where userid = :userid group by company", userid=session["user_id"])
+        stocks = []
+        for row in portfolio:
+            stocks.append(row["company"])
+        
+        return render_template("sell.html",stalk=stocks)
+        
     return apology("TODO")
 
 

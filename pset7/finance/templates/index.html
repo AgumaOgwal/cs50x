@@ -8,42 +8,58 @@
     
         <div>
             
-            <p >
-                user: {{ username }} 
-            </p>
-            <p>
-                cash: {{ cash }}
-            </p>
+            <!--<p >-->
+            <!--    user: {{ username }} -->
+            <!--</p>-->
+            <!--<p>-->
+            <!--    cash: {{ cash }}-->
+            <!--</p>-->
             
             <table style="width:100%">
                 <tr>
-                    <th>Company</th> 
+                    <th>Symbol</th> 
+                    <th>Name</th>
                     <th>Shares</th>
                     <th>Current Price</th>
-                    <th>Total Value</th>
+                    <th>Total</th>
                 </tr>
                 {% for stock in stocks %}
                     <tr>
                         <td>{{ stock.company }}</td>
+                        <td>{{ stock.companyname }}</td>
                         <td>{{ stock.shares }}</td>
-                        <td>{{ stock.price }}</td>
-                        <td>{{ stock.total }}</td>
+                        <td>${{ stock.price }}</td>
+                        <td>${{ stock.total }}</td>
                     </tr>
                 {% endfor %}
+                </tr>
+                <tr>
+                    <td>CASH</td>
+                    <td></td>
+                    <td></td>
+                     <td></td>
+                    <td>${{ cash }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                     <td></td>
+                    <td><strong>${{ total }}</strong></td>
                 </tr>
             </table>
             
             <br>
-            <table>
-                <tr>
-                    <th>Cash Balance</th>
-                    <th>Grand Total</th>
-                </tr>
-                <tr>
-                    <td>{{ cash }}</td>
-                    <th>{{ total }}</th>
-                </tr>
-            </table>
+            <!--<table>-->
+            <!--    <tr>-->
+            <!--        <th>Cash Balance</th>-->
+            <!--        <th>Grand Total</th>-->
+            <!--    </tr>-->
+            <!--    <tr>-->
+            <!--        <td>{{ cash }}</td>-->
+            <!--        <th>{{ total }}</th>-->
+            <!--    </tr>-->
+            <!--</table>-->
         </div>
         
 {% endblock %}

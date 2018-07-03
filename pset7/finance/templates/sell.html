@@ -5,18 +5,20 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/buy" method="post">
+    <form action="/sell" method="post">
         <div class="form-group">
-            <select>
-                {% for stock in stocks %}
-                <option value="symbol">{{ stock.name }}</option>
+            <select name="symbol">
+                {% for stock in stalk %}
+                <option>{{ stock }}</option>
                 {% endfor %}
             </select>
-            <input autocomplete="off" autofocus class="form-control" name="numberofshares" placeholder="Number of Shares" type="text"/>
-            <button class="btn btn-primary" type="submit">Sell</button>
-
         </div>
         
-        <button class="btn btn-primary" type="submit">Sell</button>
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="numberofshares" placeholder="Number of Shares" type="text"/>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Sell</button> 
+        
     </form>
 {% endblock %}
