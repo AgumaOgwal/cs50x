@@ -28,8 +28,8 @@
                         <td>{{ stock.company }}</td>
                         <td>{{ stock.companyname }}</td>
                         <td>{{ stock.shares }}</td>
-                        <td>${{ stock.price }}</td>
-                        <td>${{ stock.total }}</td>
+                        <td>{{ usd(stock.price) }}</td>
+                        <td>{{ usd(stock.total) }}</td>
                     </tr>
                 {% endfor %}
                 </tr>
@@ -38,28 +38,19 @@
                     <td></td>
                     <td></td>
                      <td></td>
-                    <td>${{ cash }}</td>
+                    <td>{{ usd(cash) }}</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td></td>
                     <td></td>
                      <td></td>
-                    <td><strong>${{ total }}</strong></td>
+                    <td><strong>{{ usd(total) }}</strong></td>
                 </tr>
             </table>
             
             <br>
-            <!--<table>-->
-            <!--    <tr>-->
-            <!--        <th>Cash Balance</th>-->
-            <!--        <th>Grand Total</th>-->
-            <!--    </tr>-->
-            <!--    <tr>-->
-            <!--        <td>{{ cash }}</td>-->
-            <!--        <th>{{ total }}</th>-->
-            <!--    </tr>-->
-            <!--</table>-->
+            
         </div>
         
 {% endblock %}
