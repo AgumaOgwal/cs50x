@@ -64,6 +64,32 @@ $(document).ready(function() {
 function addMarker(place)
 {
     // TODO
+    //cordinates = new google.maps.LatLng(place["latitude"],place["longitude"])
+    //cordinates = {lat: place["latitude"], lng: place["longitude"]};
+    
+    //console.log("Cordinates are "+JSON.stringify(cordinates)+"\n");
+    let marker = new google.maps.Marker({
+        position: {lat: place["latitude"], lng: place["longitude"]},
+        map: map,
+        label: place["place_name"]+", "+place["admin_name1"]
+    });
+    
+    let parameters = {
+        geo: place["postal_code"]
+    };
+    
+    marker.addListener('click', function() {
+        $.getJSON("/articles", parameters, function(data, textStatus, jqXHR){
+            
+           showInfo(marker,data);
+           //console.log(data);
+        });
+       
+    });
+    
+    markers.push(marker);
+    
+    //console.log("Markers length is now"+markers.length);
 }
 
 
@@ -98,8 +124,9 @@ function configure()
         templates: {
             suggestion: Handlebars.compile(
                 "<div>" +
-                "TODO" +
+                "{{place_name}}, {{admin_name1}}, {{postal_code}}" +
                 "</div>"
+                
             )
         }
     });
@@ -139,6 +166,12 @@ function configure()
 function removeMarkers()
 {
     // TODO
+    for(let i = 0; i < markers.length; i ++)
+    {
+        markers[i].setMap(null);
+        //markers[i] = null;
+    }
+    
 }
 
 
@@ -160,6 +193,16 @@ function search(query, syncResults, asyncResults)
 // Show info window at marker with content
 function showInfo(marker, content)
 {
+    let infoData = "<ul>";
+    
+    for(var i = 0; i < content.length; i++){
+        let noder = "";
+        
+        noder = "<li><a href=\""+content[i]["link"]+"\">"+content[i]["title"]+"</a></li>";
+        console.log(noder);
+        infoData += noder;
+    }
+    infoData += "</ul>"
     // Start div
     let div = "<div id='info'>";
     if (typeof(content) == "undefined")
@@ -169,7 +212,8 @@ function showInfo(marker, content)
     }
     else
     {
-        div += content;
+        // div += content;
+        div += infoData;
     }
 
     // End div
@@ -206,6 +250,7 @@ function update()
        for (let i = 0; i < data.length; i++)
        {
            addMarker(data[i]);
+           //console.log("Data is "+JSON.stringify(data[i])+"\n");
        }
     });
 };

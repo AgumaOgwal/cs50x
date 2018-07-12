@@ -5,6 +5,9 @@ from flask import Flask, jsonify, render_template, request
 from cs50 import SQL
 from helpers import lookup
 
+#for debugging
+import sys
+
 # Configure application
 app = Flask(__name__)
 
@@ -31,16 +34,41 @@ def index():
 def articles():
     """Look up articles for geo"""
 
+    # Ensure the geo parameter exists
+    if not request.args.get("geo"):
+        raise RuntimeError("Missing Geo Code")
+    
+    articles = lookup(request.args.get("geo"))
+    
+    main = []
+    counter = 1
+    for article in articles:
+        if counter > 5:
+            break
+        main.append(article)
+        counter=counter+1
     # TODO
-    return jsonify([])
+    return jsonify(main)
 
 
 @app.route("/search")
 def search():
     """Search for places that match query"""
-
+    
+    if not request.args.get("q"):
+        raise RuntimeError("Missing q")
+    
+    # List comprehesion
+    # https://stackoverflow.com/questions/4071396/split-by-comma-and-strip-whitespace-in-python
+    querystrings = [x.strip() for x in request.args.get("q").split(',')]
+    # queryString = request.args.get("q").split(",")
+    print(querystrings, file=sys.stdout)    
+    
+    q = request.args.get("q") + "%"
+    
+    rows = db.execute("SELECT * FROM places WHERE postal_code LIKE :q", q=q)
     # TODO
-    return jsonify([])
+    return jsonify(rows)
 
 
 @app.route("/update")
